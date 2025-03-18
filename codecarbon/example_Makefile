@@ -1,0 +1,24 @@
+NTIMES=2
+FIBONACCI=44
+EXEC_NAME=fibonacci-linear.c
+
+export NTIMES
+
+compile:
+	/usr/bin/gcc -O2 $(EXEC_NAME) -o fibonacci_run
+	
+measure:
+	sudo modprobe msr
+	sudo ../../../RAPL/main "./fibonacci_run $(FIBONACCI)" C fibonacci_linear_44 $(NTIMES)
+
+codecarbon:
+	sudo python3 ../../../Codecarbon/tracker.py fibonacci_run $(FIBONACCI) C fibonacci_linear_44 $(NTIMES)
+
+run:
+	./fibonacci_run $(FIBONACCI)
+
+mem: 
+	{ /usr/bin/time -v ./fibonacci_run $(FIBONACCI) > /dev/null; } 2>&1 | grep "Maximum resident" #| sed "s/[^0-9]\+\([0-9]\+\).*/\1/"
+
+clean:
+	rm -f fibonacci_run
