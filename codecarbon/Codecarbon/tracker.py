@@ -19,7 +19,10 @@ for execution in range(1, num_executions + 1):
 
     tracker.start()
 
-    os.system(f"./{program} {term}")
+    if language == "C":
+        os.system(f"./{program} {term}")
+    elif language == "JavaScript":
+        os.system(f"node {program} {term}")
 
     tracker.stop()
 
